@@ -19,6 +19,8 @@ type NodeConfig struct {
 type TunnelRoutingConfig struct {
 	Enable            bool                `comment:"Enable or disable tunnel routing."`
 	InstallRoutes     bool                `comment:"Install system routing table entries automatically (Linux only)."`
+	SourceIP          string              `comment:"Local source IPV4 or IPV6 address (Linux only)."`
+	InstallSourceIP   bool                `comment:"Install local source IPV4 or IPV6 address on the loopback interface (Linux only)."`
 	YggdrasilRouting  bool                `comment:"Enable or disable routing of Yggdrasil IPv6 addresses/subnets."`
 	RemoteSubnets     map[string][]string `comment:"IPv4 or IPv6 subnets belonging to remote nodes by public key, e.g.\n{ \"boxpubkey\": [ \"a.b.c.d/e\", \"aaaa:bbbb:cccc::/e\" ] }"`
 	IPv6RemoteSubnets map[string]string   `json:"-" comment:"IPv6 subnets belonging to remote nodes, mapped to the node's public\nkey, e.g. { \"aaaa:bbbb:cccc::/e\": \"boxpubkey\", ... }"`

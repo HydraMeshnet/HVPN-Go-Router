@@ -275,17 +275,29 @@ func main() {
 			n.tun.SetupAdminHandlers(n.admin)
 		}
 		if n.tun != nil && cfg.InstallRoutes {
+			if cfg.InstallSourceIP {
+				if err := routes.AddIP("lo", cfg.SourceIP); err != nil {
+					panic(err)
+				}
+			}
+			hexPublicKey := hex.EncodeToString(publicKey)
 			cidrs := make([]string, 0)
-			for _, nets := range cfg.RemoteSubnets {
-				cidrs = append(cidrs, nets...)
+			for key, nets := range cfg.RemoteSubnets {
+				if key != hexPublicKey {
+					cidrs = append(cidrs, nets...)
+				}
 			}
-			for _, cidr := range cfg.IPv4RemoteSubnets {
-				cidrs = append(cidrs, cidr)
+			for key, cidr := range cfg.IPv4RemoteSubnets {
+				if key != hexPublicKey {
+					cidrs = append(cidrs, cidr)
+				}
 			}
-			for _, cidr := range cfg.IPv6RemoteSubnets {
-				cidrs = append(cidrs, cidr)
+			for key, cidr := range cfg.IPv6RemoteSubnets {
+				if key != hexPublicKey {
+					cidrs = append(cidrs, cidr)
+				}
 			}
-			if err := routes.SetRoutes(n.tun, logger, cidrs); err != nil {
+			if err := routes.SetRoutes(n.tun, logger, cidrs, cfg.SourceIP); err != nil {
 				panic(err)
 			}
 		}
